@@ -16,23 +16,46 @@ To install Cuckoo Nav, follow these steps:
 
 Cuckoo Nav works on Craft 2.4.x and Craft 2.5.x.
 
-## Cuckoo Nav Overview
-
--Insert text here-
-
-## Configuring Cuckoo Nav
-
--Insert text here-
 
 ## Using Cuckoo Nav
 
--Insert text here-
+Cuckoo Nav provides a variable to query a Structure section, eg `{% set primaryNav = craft.cuckooNav.getNav('site') %}`.
+This provides an object that can be iterated through with each item providing an element for the current entry in the iteration and an array of children (if present).
+
+The entry element provides the following attributes: `id`, `url` and `title`.
+
+For example taking the above example we can loop through the results as follows:
+
+```
+	<ul>
+	{% for entry in primaryNav %}
+		{% set item = entry.element %}
+		<li>
+			<a href="{{ url(item.url) }}">{{ item.title }}</a>
+			{% if entry.children is defined and entry.children|length %}
+			<ul>
+			{% for entry_child in item.children if entry_child.element is defined %}
+				{% set item_child = entry_child.element %}
+				<li>
+					<a href="{{ url(item_child.url) }}">{{ item_child.title }}</a>
+					…
+				</li>
+			{% endfor %}
+			</ul>
+			{% endif %}
+		</li>
+	</ul>
+```		
+
+For larger or deeper structures the loop can easily be placed in a `macro`.
 
 ## Cuckoo Nav Roadmap
 
 Some things to do, and ideas for potential features:
 
-* Release it
+* more exhaustive documentation
+* simplify variables and conditional logic required in querying
+* abstract variable into server
 
 Brought to you by [cole007](http://ournameismud.co.uk/)
 Cuckoo Clock by Andrejs Kirma from the Noun Project
